@@ -4,7 +4,7 @@ async function loadGallery() {
   if (!grid) return;
   const themeFilter = document.body.dataset.theme || null;
   try {
-    const res = await fetch('data/gallery.json');
+    const res = await fetch('/sigilsix_full_production/data/gallery.json');
     const items = await res.json();
     const filtered = themeFilter ? items.filter(i => i.theme === themeFilter) : items;
     grid.innerHTML = '';
