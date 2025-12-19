@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SigilSix — Jay's Portfolio</title>
+  <meta name="description" content="Welcome to SigilSix — Portfolio of Jay. Gothic, alt and industrial photography & graphic design.">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: transform;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .landing-container {
+      text-align: center;
+      max-width: 600px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand {
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      font-size: 1.25rem;
+      color: #cccccc;
+      margin-bottom: 15px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .description {
+      font-size: 1rem;
+      color: #999999;
+      margin-bottom: 50px;
+      line-height: 1.8;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 16px 48px;
+      background: #ffffff;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      margin: 0 10px 15px 10px;
+    }
+
+    .cta-button:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-button.secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 2px solid #ffffff;
+    }
+
+    .cta-button.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: #666666;
+      margin: 40px auto;
+    }
+
+    .social-links {
+      margin-top: 40px;
+    }
+
+    .social-links a {
+      color: #999999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin: 0 15px;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: #ffffff;
+    }
+
+    @media (max-width: 600px) {
+      .brand {
+        font-size: 2.5rem;
+      }
+
+      .tagline {
+        font-size: 1.1rem;
+      }
+
+      .cta-button {
+        display: block;
+        margin: 10px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-container">
+    <img class="bg-image" src="images/landing-bg.jpg" alt="Background">
+    <div class="bg-overlay"></div>
+  </div>
+
+  <div class="landing-container">
+    <div class="brand">SigilSix</div>
+    <div class="tagline">Jay's Portfolio</div>
+    <div class="divider"></div>
+    
+    <p class="description">
+      Gothic, industrial &amp; alt photography and graphic design. 
+      A curated portfolio of visual work spanning urban ruins, portraiture, and conceptual graphic design.
+    </p>
+
+    <div>
+      <a href="index.html" class="cta-button">View Portfolio</a>
+      <a href="gallery.html" class="cta-button secondary">All Works</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="social-links">
+      <a href="https://instagram.com/SigilSix" target="_blank">Instagram</a>
+      <a href="mailto:hello@sigilsix.example">Email</a>
+    </div>
+  </div>
+
+  <script>
+    const bgImage = document.querySelector('.bg-image');
+    const container = document.querySelector('.bg-container');
+    let mouseX = 0;
+    let mouseY = 0;
+    let tiltX = 0;
+    let tiltY = 0;
+    let isTouch = false;
+
+    // Mouse movement parallax for desktop
+    document.addEventListener('mousemove', (e) => {
+      if (isTouch) return;
+      
+      mouseX = e.clientX / window.innerWidth - 0.5;
+      mouseY = e.clientY / window.innerHeight - 0.5;
+      
+      updateTransform();
+    });
+
+    // Device orientation for mobile
+    window.addEventListener('deviceorientation', (e) => {
+      isTouch = true;
+      
+      tiltX = (e.beta - 45) / 45; // -1 to 1
+      tiltY = (e.gamma / 90); // -1 to 1
+      
+      updateTransform();
+    });
+
+    // Fallback for devices that don't support deviceorientation
+    window.addEventListener('touchstart', () => {
+      isTouch = true;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isTouch) return;
+      
+      const touch = e.touches[0];
+      mouseX = touch.clientX / window.innerWidth - 0.5;
+      mouseY = touch.clientY / window.innerHeight - 0.5;
+      
+      updateTransform();
+    });
+
+    function updateTransform() {
+      const offsetX = isTouch ? tiltY * 30 : mouseX * 30;
+      const offsetY = isTouch ? tiltX * 30 : mouseY * 30;
+      const scale = 1.05;
+      
+      bgImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    }
+
+    // Request permission for iOS 13+
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+ requires user gesture to access device orientation
+      document.addEventListener('click', () => {
+        DeviceOrientationEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+            }
+          })
+          .catch(console.error);
+      }, { once: true });
+    }
+
+    // Initialize transform
+    updateTransform();
+  </script>
+</body>
+</html>
