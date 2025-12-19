@@ -39,11 +39,10 @@
       height: 100%;
       object-fit: cover;
       will-change: transform;
-      display: none;
     }
 
     .bg-image.desktop {
-      display: block;
+      display: none;
     }
 
     .bg-image.mobile {
@@ -210,29 +209,16 @@
 
   <script>
     const bgImages = document.querySelectorAll('.bg-image');
-    const container = document.querySelector('.bg-container');
     let mouseX = 0;
     let mouseY = 0;
-    let tiltX = 0;
-    let tiltY = 0;
     let isTouch = false;
 
     // Mouse movement parallax for desktop
     document.addEventListener('mousemove', (e) => {
       if (isTouch) return;
       
-      mouseX = e.clientX / window.innerWidth - 0.5;
-      mouseY = e.clientY / window.innerHeight - 0.5;
-      
-      updateTransform();
-    });
-
-    // Device orientation for mobile
-    window.addEventListener('deviceorientation', (e) => {
-      isTouch = true;
-      
-      tiltX = (e.beta - 45) / 45; // -1 to 1
-      tiltY = (e.gamma / 90); // -1 to 1
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 40;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 40;
       
       updateTransform();
     });
@@ -246,34 +232,18 @@
       if (!isTouch) return;
       
       const touch = e.touches[0];
-      mouseX = touch.clientX / window.innerWidth - 0.5;
-      mouseY = touch.clientY / window.innerHeight - 0.5;
+      mouseX = (touch.clientX / window.innerWidth - 0.5) * 40;
+      mouseY = (touch.clientY / window.innerHeight - 0.5) * 40;
       
       updateTransform();
     });
 
     function updateTransform() {
-      const offsetX = isTouch ? tiltY * 30 : mouseX * 30;
-      const offsetY = isTouch ? tiltX * 30 : mouseY * 30;
-      const scale = 1.05;
+      const scale = 1.1;
       
       bgImages.forEach(img => {
-        img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+        img.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(${scale})`;
       });
-    }
-
-    // Request permission for iOS 13+
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      // iOS 13+ requires user gesture to access device orientation
-      document.addEventListener('click', () => {
-        DeviceOrientationEvent.requestPermission()
-          .then(permissionState => {
-            if (permissionState === 'granted') {
-              window.addEventListener('deviceorientation', handleOrientation);
-            }
-          })
-          .catch(console.error);
-      }, { once: true });
     }
 
     // Initialize transform
