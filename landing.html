@@ -39,6 +39,15 @@
       height: 100%;
       object-fit: cover;
       will-change: transform;
+      display: none;
+    }
+
+    .bg-image.desktop {
+      display: block;
+    }
+
+    .bg-image.mobile {
+      display: block;
     }
 
     .bg-overlay {
@@ -49,6 +58,26 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.5);
       z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .bg-image.desktop {
+        display: none;
+      }
+
+      .bg-image.mobile {
+        display: block;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .bg-image.desktop {
+        display: block;
+      }
+
+      .bg-image.mobile {
+        display: none;
+      }
     }
 
     .landing-container {
@@ -151,7 +180,8 @@
 </head>
 <body>
   <div class="bg-container">
-    <img class="bg-image" src="images/landing-bg.jpg" alt="Background">
+    <img class="bg-image desktop" src="images/landing-bg-desktop.jpg" alt="Background">
+    <img class="bg-image mobile" src="images/landing-bg.jpg" alt="Background">
     <div class="bg-overlay"></div>
   </div>
 
@@ -179,7 +209,7 @@
   </div>
 
   <script>
-    const bgImage = document.querySelector('.bg-image');
+    const bgImages = document.querySelectorAll('.bg-image');
     const container = document.querySelector('.bg-container');
     let mouseX = 0;
     let mouseY = 0;
@@ -227,7 +257,9 @@
       const offsetY = isTouch ? tiltX * 30 : mouseY * 30;
       const scale = 1.05;
       
-      bgImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      bgImages.forEach(img => {
+        img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      });
     }
 
     // Request permission for iOS 13+
